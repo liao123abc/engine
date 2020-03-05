@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart = 2.6
 import 'dart:html' as html;
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -194,8 +195,10 @@ void main() async {
 
   test('drawColor should cover full size', () async {
     final RecordingCanvas rc = RecordingCanvas(screenRect);
-    rc.drawColor(const Color(0xFFFF0000), BlendMode.multiply);
+    final Paint testPaint = Paint()..color = const Color(0xFF80FF00);
     rc.drawRect(const Rect.fromLTRB(10, 20, 30, 40), testPaint);
+    rc.drawColor(const Color(0xFFFF0000), BlendMode.multiply);
+    rc.drawRect(const Rect.fromLTRB(10, 60, 30, 80), testPaint);
     expect(rc.computePaintBounds(), screenRect);
     await _checkScreenshot(rc, 'draw_color');
   });
@@ -434,6 +437,7 @@ void main() async {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2.0
           ..color = const Color(0xFF404000));
+    rc.restore();
     await _checkScreenshot(rc, 'path_with_line_and_roundrect');
   });
 }
